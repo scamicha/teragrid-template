@@ -37,11 +37,14 @@ Co-PI: Thomas Steiman-Cameron}
 \begin{abstract}
 
   We propose to use XSEDE's unique computational and storage resources, namely large shared memory systems and wide area
-  file systems, to conduct three dimensional radiative hydrodynamic simulations of protoplanetary disks with embedded
+  file system, to conduct three dimensional radiative hydrodynamic simulations of protoplanetary disks with embedded
   objects. The SGI Altix UV systems in XSEDE are particularly well suited for our code, CHYMERA, because it is OpenMP
   parallel and scales to 128 cores. We also propose to continue and extend previous work under a TeraGrid research
-  grant,which enabled us to utilize wide area networked (WAN) file systems to streamline our workflow and increase
-  productivity. With the awarded allocation we will conduct a suite of simulations using the CHYMERA code 
+  grant, which enabled us to utilize wide area networked (WAN) file systems to streamline our workflow and increase
+  productivity. With the awarded allocation we will conduct a suite of simulations using the CHYMERA code to further our
+  understanding of the effects of gravitational instabilities (GIs) on planet migration in protoplanetary disks. In
+  addition, we will use the new functionality of the CHYMERA code to simulate circumbinary disks to understand how GIs
+  might behave in a binary system.
   \\
 
 \end{abstract}
@@ -50,21 +53,22 @@ Co-PI: Thomas Steiman-Cameron}
 \label{sec:intro}
 
 There are two major theories of gas giant planet formation which are currently being considered, core accretion and disk
-instability. Each theory has unanswered questions. In the core accretion picture \citep{mizuno1980}, a large solid core
-must first build up through the collision of rocky materials. When this core grows to several Earth masses, it
-gravitationally attracts the surrounding gas to form a gas giant planet. Observational estimates of disk lifetimes range
-from 0.1 to 10 Myr, \citep{haisch2001,chen2004} with an average lifetime of $\sim 3$ Myr. Although extreme ages exist,
-an upper limit of 10 Myr is generally agreed upon. Simulations by \citet{pollack1996} found that core accretion could
-produce a gas giant planet $\sim 8$ Myr after kilometer-sized planetesimals have formed. However, the core masses
-($M_{core}$) of the planets produced by these simulations ($\sim 15 M_{\oplus}$) are outside the range of Jupiter's core
-mass (0--11 $M_{\oplus}$) inferred from the Jovian gravitational moments and detailed equation of state calculations
-\citep{saumon2004}. The large range of possible $M_{core}$ is due to uncertainties in the equation of state (EOS) of
-hydrogen and helium at megabar pressures. \citet{saumon2004} found the most likely values of $M_{core}$ to be $\leq 5
-M_{\oplus}$. This leads to several possibilities: (1) Core accretion can occur for $M_{core} \leq 5 M_{\oplus}$, (2)
-Jupiter formed with a more massive core which was then dispersed into Jupiter's outer layers, or (3) Jupiter did not
-form via core accretion. More recent work by \citet{hub2005} and \citet{papa2005} have addressed the first point by
-demonstrating that a gas giant planet can form via core accretion with $M_{core}=5 M_{\oplus}$ in 4.5 Myr and 3 Myr,
-respectively. However, for these simulations the authors have used dust grain opacities of 2\% and 1\% of the
+instability. It is well known that gas giant planets form in the disks of infalling material surrounding a forming, or
+protostars. These disks are known as protoplanetary disks. In the core accretion picture \citep{mizuno1980}, a large
+solid core must first build up through the collision of rocky materials in the disk. When this core grows to several
+Earth masses, it gravitationally attracts the surrounding gas to form a gas giant planet. Observational estimates of
+disk lifetimes range from 0.1 to 10 Myr, \citep{haisch2001,chen2004} with an average lifetime of $\sim 3$ Myr. Although
+extreme ages exist, an upper limit of 10 Myr is generally agreed upon. Simulations by \citet{pollack1996} found that
+core accretion could produce a gas giant planet $\sim 8$ Myr after kilometer-sized planetesimals have formed. However,
+the core masses ($M_{core}$) of the planets produced by these simulations ($\sim 15 M_{\oplus}$) are outside the range
+of Jupiter's core mass (0--11 $M_{\oplus}$) inferred from the Jovian gravitational moments and detailed equation of
+state calculations \citep{saumon2004}. The large range of possible $M_{core}$ is due to uncertainties in the equation of
+state (EOS) of hydrogen and helium at megabar pressures. \citet{saumon2004} found the most likely values of $M_{core}$
+to be $\leq 5 M_{\oplus}$. This leads to several possibilities: (1) Core accretion can occur for $M_{core} \leq 5
+M_{\oplus}$, (2) Jupiter formed with a more massive core which was then dispersed into Jupiter's outer layers, or (3)
+Jupiter did not form via core accretion. More recent work by \citet{hub2005} and \citet{papa2005} have addressed the
+first point by demonstrating that a gas giant planet can form via core accretion with $M_{core}=5 M_{\oplus}$ in 4.5 Myr
+and 3 Myr, respectively. However, for these simulations the authors have used dust grain opacities of 2\% and 1\% of the
 interstellar value. When the dust grain opacity is set to the interstellar value, gas giants form in 95 Myr and 30
 Myr. Forming kilometer-sized planetesimals needed to build the cores may be difficult due the effects of
 migration. Planetesimals must grow from small dust grains in the gas disk which is accreting into the central
@@ -110,27 +114,38 @@ some authors have proposed hybrid theories where GIs assist planetesimal formati
 \section{Gravitational Instabilities and\\ Planet Migration}
 \label{sec:migration}
 
-To date simulations published by our group have focused on the question of whether gas giant planets can form directly
-via gravitational instability. We have also studied the effects of GIs on global disk properties such as surface
-density, mass transport and non-axisymmetric structure. Regardless of how a gas giant planet forms, whether by core
-accretion, gravitational instability, or a hybrid of the two, another interesting question is what happens to a
+To date simulations published by our group have primarily focused on the question of whether gas giant planets can form
+directly via gravitational instability. We have also studied the effects of GIs on global disk properties such as
+surface density, mass transport and non-axisymmetric structure. Regardless of how a gas giant planet forms, whether by
+core accretion, gravitational instability, or a hybrid of the two, another interesting question is what happens to a
 protoplanet after it has formed and before the disk dissipates.  Linear analysis \citep{ward1997,tanaka2002} as well as
 numerical simulations \citep{nelson2003,nelson2004} indicate that in a laminar disk, or a disk dominated by MHD
-turbulence, planets tend to migrate inward rapidly via Type I or Type II migration, depending on their mass, and are
-accreted onto the central star within a few $\times 10^5$ years. In the case of Type I migration, the protoplanet is not
+turbulence, planets tend to migrate inward rapidly via type I or type II migration, depending on their mass, and are
+accreted onto the central star within a few $\times 10^5$ years. In the case of type I migration, the protoplanet is not
 massive enough to open a gap in the disk and migrates inward by exchanging angular momentum with the disk via
-gravitational torques. With Type II migration the protoplanet is massive enough to open a gap and then migrates with the
+gravitational torques. With type II migration the protoplanet is massive enough to open a gap and then migrates with the
 motion of the surrounding disk. In either case, the timescale for the protoplanet to migrate into the central star is
 very short compared to disk lifetimes. However, if the disk is gravitationally unstable, the instabilities may slow
 inward migration, or even cause the protoplanet to move outward. This would help to explain how protoplanets can survive
 in a protoplanetary disk after they form as well as provide insight into their distributions in multiple planet systems,
-26 of which have already been discovered. So far, migration in gravitationally unstable disks has only been studied in
-the context of fragmented disks \citep{mayer2004,boss2005}.
+53 of which have already been discovered. So far, the study of migration in gravitationally unstable disks has been
+focused on the context of fragmented disks \citep{mayer2004,boss2005}. However, new studies are emerging focusing on
+planet migration in non-fragmenting gravitationally unstable disks \citep{michael2011b, baruteau2011}.
 
 Additions made to our code prior to our 08-09 award allowed us to follow the motion of massive particles in
 protoplanetary disks undergoing GIs. We were also able to model the effect of a massive planet on the disk and the
 feedback between the planet and GIs. By examining a range of masses ($0.3 M_{\mathrm{jup}}$ -- $3 M_{\mathrm{jup}}$), we
-have been studying how GIs affect gap opening and the transition between Type I and Type II migration.
+have been studying how GIs affect gap opening, the transition between type I and type II migration, the effect of GIs on
+type I migration rates, whether GIs might be able to halt inward migration, and the effect of a massive planet on the
+onset of GIs.
+
+\begin{figure} [t] % t=top, b=bottom, h=here, p=separate page
+\includegraphics[width=0.47\textwidth]{0.3JUP.eps}
+\caption{Midplane density map of a simulation of a gravitationally unstable disk with a 0.3 Jupiter mass planet inserted
+  at 10.5 ORP. By 22.7 ORP the planet has migrated outward from its initial position of 25 AU. Axes are labelled in AU
+  and the density scale is logarithmic. The white X indicates the position of the system COM in the accelerated frame,
+  and the black diamond indicates the position of the planet. \label{fig:modes}}
+\end{figure}
 
 \section{Computational Methodology}
 \label{sec:method}
@@ -170,6 +185,15 @@ transport is modeled in the $\varpi$ and $\phi$ directions for $\tau < 1/\sqrt{3
 the vertical transport is modeled explicitly, no fitting of an atmosphere is required and cell-to-cell coupling is
 included explicitly for all $\tau$.
 
+\begin{figure*}[t]
+\includegraphics[width=1.0\textwidth]{HOLEplA.eps}
+\caption{Plot of the radial positions of the planets in the 0.3 $M_J$ (blue), 1 $M_J$ (green), and 3 $M_J$ (red)
+  simulations. The lines represent the radial position at each time while the diamonds show the semi-major axis for each
+  orbit centered at the temporal midpoint of the orbit. The black dashed line represents the type I estimated migration
+  rate for a 1 MJ planet.}
+\label{fig:planetmotion}
+\end{figure*}
+
 \subsection{Planet Integrator}
 \label{sec:planetintegrate}
 
@@ -189,6 +213,7 @@ on the integer time steps and the velocities $\boldsymbol{v}$ specified on the h
 \end{subequations}
 Note that the displacement of $\boldsymbol{v}$ with respect to $\boldsymbol{r}$ and $\boldsymbol{a}$ is time symmetric, preventing the accumulation of error in the energy over time.
 
+
 \subsection{Code Testing}
 \label{sec:tests}
 
@@ -203,9 +228,19 @@ in the orbit, which maintained nearly constant apapse and periapse radii.
 \section{Previous Work and Planned Simulations}
 \label{sec:plan}
 
+\begin{figure}[t]
+\includegraphics[width=0.47\textwidth]{binary.eps}
+\caption{Midplane density map of a simulation of a gravitationally unstable disk with a 20 Jupiter mass brown dwarf
+  inserted into the equilibrium model with a 2 AU orbital separation. By 7.25 ORP a strong three-armed instability has
+  developed and driven a large amount of material into the binary orbit. Axes are labelled in AU and the density scale
+  is logarithmic. The white X indicates the position of the system COM in the accelerated frame, and the white diamond
+  indicates the position of the brown dwarf.}
+\label{fig:binary}
+\end{figure}
+
 \subsection{Studies in Planet Migration} \label{sec:migplan}
 
-Many gravitationally unstable protoplanetary disk studies have been carried out under previous TeraGrid awards granted
+Several gravitationally unstable protoplanetary disk studies have been carried out under previous TeraGrid awards granted
 to PI Richard H. Durisen. Namely, TeraGrid awards TG-AST080031T and TG-AST090027, which resulted in several publications
 \citep{henschel2010,michael2010a,michael2010b,michael2011a} in both the astronomical sciences and in computer
 science. With the current request for XSEDE, we plan to extend and expand upon this work. Under PI Scott Michael, we
@@ -213,30 +248,37 @@ have already received a startup award (TG-AST110027) that has been put to great 
 code on the new Altix UV architecture and submission of an article to Astrophysical Journal Letters, a peer-reviewed
 express scientific journal that allows astrophysicists to rapidly publish short notices of significant original research
 \citep{michael2011b}. Under our previous awards we planned to study the effect of both planet mass and planet position
-on migration in a GI-active disk. Subsequently we realized an additional interesting study would be to understand the
+on migration in a GI-active disk. Subsequently, we realized an additional interesting study would be to understand the
 effect a planet might have on a marginally stable disk. For this reason we undertook a series of seven simulations to
-study the effects of planet mass and the effect of injecting the planet at different times in the evolution of the
-disk. Figure \ref{fig:modes} is an example from one such simulation.
+study the effects of planet mass and the effect of injecting the planet at different stages in the evolution of the
+disk. Figure \ref{fig:modes} is an example of midplane and meridional density contours from one such simulation.
 
-We plan to continue our work and follow up our studies on planet mass with studies of injection position in an already
-GI-active disk. Our current studies of GI-active disks have placed planets of varying mass at the co-rotation radii of
-the dominant GI active modes. We will follow up on these studies by injecting varying mass planet outside the
-co-rotation radii of the dominant modes to determine under what conditions outward migration might be possible. By
-placing the planet at the outer Linblad resonance of the strongest mode \citep{binney1987}, we hope to understand how
-sensitive the planet's motion is to its location relative to the dominate GI modes and when its direction can change.
+We plan to continue our work by following up our studies on planet mass with a study of how injection position affects
+migration rates and GI activity. Our current studies of GI-active and marginally stable disks have placed planets of
+varying mass near the radius where we typically observe the co-rotation radii of the dominant GI active modes. We will
+follow up on these studies by injecting varying mass planet outside the co-rotation radii of the dominant modes to
+determine whether the outer Lindblad resonance (OLR) of the dominant modes can play a significant role in planet
+migration. By placing the planet at the outer Linblad resonance of the strongest mode \citep{binney1987}, we hope to
+understand how sensitive the planet's motion is to its location relative to the dominate GI modes and when its direction
+can change.
 
-One interesting result of work conducted under the previous award was the finding that upon injecting planets at the
+Simulations conducted under the previous award have led to several interesting discoveries, which will be submitted to a
+leading astronomical journal in the near future. The first discovery is the fact that GIs can, in fact, reverse the
+direction of type I migration for a 0.3 $M_J$ planet. Figure \ref{fig:planetmotion} shows the radial location of each of
+three planets inserted into a GI active disk. The blue curve represents the 0.3 $M_J$ planet simulation. One can clearly
+see, that the planet has moved outward from its initial position of 25 AU to nearly 40 AU over the course of $\sim 10$
+ORP ($\approx 1800$ years). Although other mechanisms for outward migration have been suggested
+\citep{paardekooper2010,paardekooper2011}, no one has yet demonstrated that GIs can drive outward migration, and
+alternative mechanisms are not this dramatic or robust. The second interesting discovery is that inward migration
+appears to halt for the 1 $M_J$ and 3 $M_J$ planets at 18 AU and 15 AU, respectively. We have hypothesized that this
+could be due to the inner Lindblad resonance (ILR) of the dominant GI modes in the disk. However, as the planets have
+only been in the region for a few ORP, these simulations must be extended to either confirm that the GIs truly halt
+inward migration, or show that they merely stall it.
+
+Another interesting result of work conducted under the previous award was the finding that upon injecting planets at the
 beginning of our simulations, the presence of the planet affects the onset of GI activity causing the co-rotation of the
 dominant mode to shift outward. We will conduct further tests by injecting planets at different locations at the
 beginning of the simulations to study how the planet's initial position affects the onset of GIs.
-
-\begin{figure} [t] % t=top, b=bottom, h=here, p=separate page
-\includegraphics[width=0.47\textwidth]{0.3JUP.eps}
-\caption{Midplane density map of a simulation of a gravitationally unstable disk with a 0.3 Jupiter mass planet inserted
-  at 10.5 ORP. By 22.7 ORP the planet has migrated outward from its initial position of 25 AU. Axes are labelled in AU
-  and the density scale is logarithmic. The white X indicates the position of the system COM in the accelerated frame,
-  and the black diamond indicates the position of the planet. \label{fig:modes}}
-\end{figure}
 
 Estimates for the resolution requirements were based on the planet's Hill radius. In order to capture the gravitational
 effect of the planet, one would like to resolve the Hill sphere with many resolution elements, at minimum one resolution
@@ -246,29 +288,82 @@ element in 25 per cent of the Hill sphere. So ideally we would have,
 \end{equation}
 For our least massive planet this gives a $\phi$-resolution of $~ 520$ resolution elements. We have conducted
 simulations using a resolution of 512x512x64 ($\varpi$,$\phi$,$z$) with this planet mass and have not detected any
-numerical effects due to inadequate resolution. We will continue to use this resolution for our further simulations,
-which will include two simulations studying planet position in a GI-active disk, two simulations studying the effect of
-planet injection position in an initially GI-inactive disk, and several simulations studying circumbinary disks. In
-total we plan 5 simulations at this resolution each of which should be evolved for 10--20 ORPs which is roughly equal to
-1--2 million time steps.
+numerical effects due to inadequate resolution. We will continue to use this resolution for our further simulations.
 
-\section{Performance and Scalability}
+\subsection{Studies of Circumbinary Disks}\label{sec:binary}
+
+In addition to allowing us to simulate the inclusion of massive planets in a protoplanetary disk, the code improvement
+described in \S\ref{sec:planetintegrate} also enable the simulation of circumbinary disks with large mass ratios. We
+have begun a simulation with a 1 $M_\odot$ primary star with a 20 $M_J$ binary companion. This simulation represents a
+solar type star with close brown dwarf binary companion. Preliminary results indicate very interesting GI behavior and
+strong feedback between the GI spiral structures and the binary system. Unfortunately, the action of the binary
+accelerates material near the $z$ axis, increasing the sound speed where the Courant condition is determined. This has
+the overall effect of decreasing the physical time of the time step, requiring a factor of 4 more time steps to complete
+the same amount of physical time when compared to an embedded planet simulation. Even so, the current simulation has
+progressed to nearly 10 ORP. We propose to conduct several similar simulations for comparison by varying the binary mass
+fraction and the binary separation. 
+
+\subsection{Advancement of Astrophysical Workflows, Wide Area File Systems, and TeraGrid
+  Cyberinfrastructure}\label{sec:CI}
+
+To deliver scientifically valid results from simulations performed with CHYMERA, the simulation data must go through a
+series of processing steps. We have worked over the past several years to streamline and automate the post-processing
+workflow and produce final, publishable results as quickly as possible. The typical workflow has several steps
+including: simulation, visualization, Fourier analysis, periodogram analysis, and torque analysis. These analyses are
+accompanied by several ancillary basic analyses like temperature and density structure, effective cooling times, and
+Toomre $Q$ parameters. The different stages in this workflow encompass a variety of computational resource and software
+demands, and each stage can be run at different sites. 
+
+To facilitate using different computational resources at different sites for the various stages of the workflow, we have
+been using the TeraGrid wide area file system, the Data Capacitor. Simulation data from shared memory machines at PSC or
+NCSA is written directly to the file system, which is housed at Indiana University. Visualization scripts, written in
+the Interactive Data Language (IDL), immediately execute on local campus resources, providing the researcher with an
+instant interactive look at the data as it is produced. Analysis routines, which are MPI parallel, are then executed on
+a distributed memory cluster that mounts the Data Capacitor. This can be either a TeraGrid or non-TeraGrid resource
+\citep{michael2010b}, and effectively shifts this workload off of the shared memory machines, so that they can be
+reserved for programs that truly need the shared memory capabilities.
+
+This workflow model has served our research group quite well for some time \citep{henschel2010,michael2010b}, and we
+would prefer to preserve it. Currently, the Data Capacitor is mounted at NCSA (Ember) and PSC (Pople). Preliminary tests
+indicate a 5\% overhead on Ember for writing data to the Data Capacitor versus writing directly to the local GPFS
+scratch space. This relatively minor overhead is more than made up for by the cost to transfer the data from one site to
+another. We anticipate that the Data Capacitor will be made available on the Altix UV at PSC (Blacklight) soon.
+
+\section{Service Unit Request and Justification}
 \label{sec:performance}
 
-Our previous estimates for the needed SUs were based on extrapolation from smaller core counts. Extensive testing of the
-code's scalability on several Altix machines has been conducted under the previous award's ASTA component. To date, we
-have evolved an aggregate of ~4 million production time steps and 1-2 million time steps in testing and development,
-these efforts have consumed 300,000 SUs. These real measurements have shown that a 2 million time step simulation will
-require $\sim\!\!100,000$ SUs which is a factor of two greater than our initial estimate. In total, to complete the 5
-simulations we are planning, we request 500,000 SUs on the Altix at PSC, Pople.
+Planned simulations include three simulations studying planet position in a GI-active disk, three simulations studying the effect of
+planet injection position in an initially GI-inactive disk, and several simulations studying circumbinary disks. In
+total we plan 8--10 simulations at this resolution each of which should be evolved for at least 10--20 ORPs, which is roughly equal to
+1--2 million time steps. In addition, we will extend the evolution of previously studied disks to determine whether GIs
+have permanently halted inward migration or merely stalled it for some time.
+
+Our previous estimates for the required SUs to complete simulations with planets were quite accurate on the Altix 4700
+systems of PSC and NCSA. Extensive testing of the
+code's scalability on several Altix 4700 machines has been conducted under the previous award's ASTA component. To date, we
+have evolved an aggregate of ~15 million production time steps and several million time steps in testing and
+development. Combined, these simulations have used nearly 600,000 SUs on TeraGrid shared memory machines. Since the
+Altix UV has dramatically improved capabilities over the 4700 series, we repeated our benchmarking on the new system
+(namely NCSA's Ember) to determine the SU/time step ratio.  These  measurements have shown that we require
+43,520 SUs on an Altix UV (such as Blacklight or Ember) to perform 1 million simulation time steps at a
+resolution of 512x512x64 ($\varpi$,$\phi$,$z$) using 128 OpenMP threads. In total, to complete the 8--10
+simulations we are planning, each averaging $\approx 2,000,000$ time steps, we will need $(10\times2\times43,520)$ =
+870,400 SUs. We request 1,000,000 SUs to provide a 13\% contingency, on a combination of the Altix UVs at PSC and NCSA.
+
+\subsection{Storage Request}\label{sec:storage}
+
+Each simulation produces 5--10 TB of raw data, with a few TB of reduced data being produced by the analysis and
+visualization. Currently, the data produced by simulations is being written to the Data Capacitor. As it is no longer an
+allocatable resource in XSEDE, we request 40 TB of short to medium term storage space on Albedo, the wide area file
+system. When possible, we will continue to utilize the Data Capacitor, but will test the capabilities of Albedo to
+determine if it can fill a similar role in our workflow. 
 
 \section{Summary}
 \label{sec:summary} 
 
-We seek to carry out a suite of numerical simulations to study the effects of GIs on planetary migration. These
-simulations would take a prohibitively long time using our currently available resources. In order to carry out our work
-in a reasonable amount of time, we request 500,000 SUs of computer time on PSCs Pople, and 1 year of advanced support to
-help with parallelization and development of automated workflows.
+We seek to carry out a suite of numerical simulations to study the effects of GIs on planetary migration and in
+circumbinary disks. These simulations would take a prohibitively long time using our currently available campus resources. In
+order to carry out our work in a reasonable amount of time, we request 1,000,000 SUs of Altix UV time.
 
 \scriptsize
 \setlength{\baselineskip}{7.5pt}
